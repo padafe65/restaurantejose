@@ -37,12 +37,35 @@ def create_reservation(res_data: ReservationCreate, db: Session = Depends(get_db
     db.commit()
     return new_res
 
+# --- ENDPOINT PARA VER LAS RESERVAS ---
 @router.get("/", response_model=List[ReservationOut])
 def get_reservations(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    # El Admin y Mesero ven todo. El Cliente solo ve las suyas.
-    if current_user.role in ["admin", "mesero"]:
-        return db.query(Reservation).all()
-    return db.query(Reservation).filter(Reservation.created_by_user_id == current_user.id).all()
+    # Aquí SQLAlchemy usa created_at y updated_at automáticamente del modelo
+    query = db.query(Reservation)
+    if current_user.role not in ["admin", "mesero"]:
+        query = query.filter(Reservation.created_by_user_id == current_user.id)
+    return query.all()
+
+# --- ENDPOINT PARA LA AUDITORÍA (XAMPP) ---
+@router.get("/logs")
+def get_audit_logs(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403)
+    
+    logs = db.query(AuditLog).all()
+    
+    return [
+        {
+            "id": log.id,
+            "res_id": log.reservation_id,
+            "usuario": log.user_id,
+            "accion": log.action,
+            "detalle": log.details,
+            # IMPORTANTE: Aquí usamos change_date porque es la tabla audit_logs
+            "fecha": log.change_date.strftime("%Y-%m-%d %H:%M:%S") if log.change_date else "N/A"
+        }
+        for log in logs
+    ]
 
 @router.put("/{res_id}", response_model=ReservationOut)
 def update_reservation(res_id: int, updated_data: ReservationUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

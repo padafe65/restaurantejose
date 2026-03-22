@@ -24,6 +24,22 @@ def create_table(table_data: TableCreate, db: Session = Depends(get_db), current
     db.refresh(new_table)
     return new_table
 
+# En app/routers/table.py
+
+@router.patch("/{table_id}/release")
+def release_table(table_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    if current_user.role not in ["admin", "mesero"]:
+        raise HTTPException(status_code=403, detail="No tienes permisos")
+    
+    table = db.query(Table).filter(Table.id == table_id).first()
+    if not table:
+        raise HTTPException(status_code=404, detail="Mesa no encontrada")
+    
+    # Cambiamos el estado a libre
+    table.status = "libre"
+    db.commit()
+    return {"message": f"Mesa {table.number} liberada correctamente"}
+
 @router.put("/{table_id}", response_model=TableOut)
 def update_table(table_id: int, updated_data: TableUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     if current_user.role != "admin":
