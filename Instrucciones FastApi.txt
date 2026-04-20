@@ -21,7 +21,7 @@ Paso 4: Instalar las librerías de la App:
 Paso 5: Crear el archivo "Hola Mundo"
 Para que tus compañeros vean que la instalación funciona, diles que creen un archivo nuevo en la raíz de la carpeta (fuera de la carpeta venv) llamado main.pyy peguen este código:
 
-Pitón
+Python
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -110,4 +110,7 @@ Terminal 2: Debe mostrar las URLs de Streamlit (Local y Network).
 Navegador: Se abrirá automáticamente una pestaña con la interfaz del restaurante donde don José podrá ver cómo se gestionan sus mesas
 
 Nota: Falta --> pip install "bcrypt==4.0.1", para hashear la contraseña.
+
+
+Participación en clase conpandas: caros_pc = df_clase[(df_clase['Categoria'] == 'PC') & (df_clase['Precio'] > 100)] print(caros_pc)
 

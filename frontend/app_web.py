@@ -10,7 +10,7 @@ import time as python_time
 LOGO_PATH = os.path.join("frontend", "logo_restaurante.jpg")
 API_URL = "http://127.0.0.1:8000"
 
-st.set_page_config(page_title="Restaurante Don Juan - Gestión", layout="wide", page_icon="🍽️")
+st.set_page_config(page_title="Restaurante Don José - Gestión", layout="wide", page_icon="🍽️")
 
 # --- 1. INICIALIZACIÓN DEL ESTADO ---
 if "token" not in st.session_state:
@@ -34,7 +34,7 @@ def pie_de_pagina():
     st.markdown("---")
     st.markdown(
         "<div style='text-align: center; color: gray;'>"
-        "© 2026 Restaurante Don Juan - Sistema de Gestión Interna.</div>", 
+        "© 2026 Restaurante Don José - Sistema de Gestión Interna.</div>", 
         unsafe_allow_html=True
     )
 
@@ -98,7 +98,6 @@ else:
 
 tabs = st.tabs(menu)
 
-# --- PESTAÑA 0: MESAS (STAFF) o MIS RESERVAS (CLIENTE) ---
 # --- PESTAÑA 0: MESAS (STAFF) o MIS RESERVAS (CLIENTE) ---
 with tabs[0]:
     if rol in ["admin", "mesero"]:
